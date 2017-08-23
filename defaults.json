@@ -1,0 +1,23 @@
+
+{
+  "ERROR_THRESHOLD": {
+    "type": "property",
+    "key": "ERROR_THRESHOLD",
+    "default": 10
+  },
+  "LOADBALANCER_ID": {
+    "type": "func",
+    "default_key": "LOADBALANCER_ID",
+    "func_name": "load_balancer_name"
+  },
+  "TASK_SOFT_MEMORY": {
+    "type": "property",
+    "key": "TASK_SOFT_MEMORY",
+    "default": 512
+  },
+  "CONTAINER_PORT": {
+    "type": "property",
+    "key": "CONTAINER_PORT",
+    "default": 5000
+  }
+}

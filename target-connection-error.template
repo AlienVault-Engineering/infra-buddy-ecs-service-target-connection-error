@@ -1,0 +1,64 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "",
+  "Parameters": {
+    "Environment": {
+      "Description": "The environment parameter for the docker container",
+      "Type": "String"
+    },
+    "ServiceStack": {
+      "Description": "Service stack name to create policy for",
+      "Type": "String"
+    },
+    "Threshold": {
+      "Description": "The number of errors to start scaling",
+      "Type": "Number"
+    },
+    "LoadBalancerID": {
+      "Description": "The loadbalancer to monitor",
+      "Type": "String"
+    }
+  },
+  "Resources": {
+    "ELBErrorThresholdAlarmScaleUp": {
+      "Type": "AWS::CloudWatch::Alarm",
+      "Properties": {
+        "EvaluationPeriods": "1",
+        "Statistic": "Sum",
+        "Threshold": {"Ref": "Threshold" },
+        "AlarmDescription": "Alarm if our Application ELB has too many target connection errors.",
+        "Period": "60",
+        "AlarmActions": [{"Fn::ImportValue": {"Fn::Sub": "${ServiceStack}-autoscale-ServiceScaleUpPolicy"}}],
+        "Namespace": "AWS/ApplicationELB",
+        "Dimensions": [
+          {
+            "Name": "LoadBalancer",
+            "Value": {"Ref": "LoadBalancerID"}
+          }
+        ],
+        "ComparisonOperator": "GreaterThanThreshold",
+        "MetricName": "TargetConnectionErrorCount"
+      }
+    },
+    "ELBErrorThresholdAlarmScaleDown": {
+      "Type": "AWS::CloudWatch::Alarm",
+      "Properties": {
+        "EvaluationPeriods": "1",
+        "Statistic": "Sum",
+        "Threshold": "0",
+        "AlarmDescription": "Alarm if our Application ELB has no target connection errors.",
+        "Period": "600",
+        "AlarmActions": [{ "Fn::ImportValue": {"Fn::Sub": "${ServiceStack}-autoscale-ServiceScaleDownPolicy"} }],
+        "Namespace": "AWS/ApplicationELB",
+        "Dimensions": [
+          {
+            "Name": "LoadBalancer",
+            "Value": {"Ref": "LoadBalancerID"}
+          }
+        ],
+        "ComparisonOperator": "LessThanOrEqualToThreshold",
+        "MetricName": "TargetConnectionErrorCount"
+      }
+    }
+  }
+}

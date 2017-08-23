@@ -1,0 +1,18 @@
+[
+    {
+        "ParameterKey": "Environment",
+        "ParameterValue": "${ENVIRONMENT}"
+    },
+    {
+        "ParameterKey": "ServiceStack",
+        "ParameterValue": "${ECS_SERVICE_STACK_NAME}"
+    },
+    {
+        "ParameterKey": "Threshold",
+        "ParameterValue": "${ERROR_THRESHOLD}"
+    },
+    {
+        "ParameterKey": "LoadBalancerID",
+        "ParameterValue": "${LOADBALANCER_ID}"
+    }
+]
